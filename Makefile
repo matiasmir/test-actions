@@ -1,3 +1,5 @@
+SHELL=/bin/bash
+
 #
 #   Copyright 2015  Xebia Nederland B.V.
 #
