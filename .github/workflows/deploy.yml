@@ -1,0 +1,44 @@
+# .github/workflows/deploy.yml
+name: Build & Push to GCP Artifact Registry
+
+on:
+  push:
+    branches: ["coolify"] # ⇢ equivalente a `branches: master` en Bitbucket
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest # VM que provee GitHub
+    env:
+      REGION: us-central1
+      REPO_HOST: us-central1-docker.pkg.dev
+      PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      IMAGE_TAG: ${{ github.sha }}
+
+    steps:
+      # 1) Clona tu código
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # # 2) Instala y autentica gcloud
+      # - name: Set up gcloud
+      #   uses: google-github-actions/setup-gcloud@v2
+      #   with:
+      #     project_id: ${{ secrets.GCP_PROJECT_ID }}
+      #     service_account_key: ${{ secrets.GCP_SA_KEY }}
+      #     export_default_credentials: true # deja activas las creds para siguientes pasos
+
+      # - name: Install build dependencies
+      #   run: sudo apt-get update && sudo apt-get install -y build-essential
+
+      # # 3) Configura Docker para Artifact Registry
+      # - name: Authorize Docker push
+      #   run: |
+      #     gcloud auth configure-docker $REGION-docker.pkg.dev --quiet
+
+      # 4) Construye tu imagen (usa tu Makefile)
+      - name: Build image
+        run: make get-image
+
+      # 5) Etiqueta y sube la imagen (o usa tu `make snapshot`)
+      - name: Push snapshot
+        run: make snapshot
