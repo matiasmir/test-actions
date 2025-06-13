@@ -3,7 +3,7 @@ name: Build & Push to GCP Artifact Registry
 
 on:
   push:
-    branches: ["coolify"] # ⇢ equivalente a `branches: master` en Bitbucket
+    branches: ["main"] # ⇢ equivalente a `branches: master` en Bitbucket
 
 jobs:
   build-and-push:
